@@ -6,7 +6,7 @@ import java.util.Random;
 public class Food {
     private final static Color[] COLORS = {
             new Color(0xC45050), // BITTERSWEET SHIMMER
-            new Color(0xEDD89C), // TUSCAN
+            new Color(0xF2D380), // BUFF
             new Color(0x85DB98), // LIGHT GREEN
     };
 
