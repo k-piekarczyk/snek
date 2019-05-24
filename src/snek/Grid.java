@@ -45,7 +45,7 @@ public class Grid {
         return new Point(x, y);
     }
 
-    public void update() {
+    public boolean update() {
         if (food.getPoint().equals(snake.getHead())) {
             snake.extend();
             snake.move();
@@ -53,14 +53,8 @@ public class Grid {
         } else {
             snake.move();
         }
-    }
 
-    public int getRows() {
-        return rows;
-    }
-
-    public int getCols() {
-        return cols;
+        return !snake.didCollide();
     }
 
     public Snake getSnake() {
@@ -72,13 +66,6 @@ public class Grid {
         return food;
     }
 
-    public int getWidth() {
-        return cols * SIZE;
-    }
-
-    public int getHeight() {
-        return rows * SIZE;
-    }
 
     public int getRealX(Point point) {
         return (int) point.getX() * SIZE;

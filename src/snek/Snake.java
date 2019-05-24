@@ -10,6 +10,7 @@ public class Snake implements KeyListener {
     private enum Direction {UP, DOWN, LEFT, RIGHT}
 
     public final static Color COLOR = new Color(0x424242); // ARSENIC
+    public final static Color COLLISION_COLOR = new Color(0xC45050); // ARSENIC
     public final static int INITIAL_LENGTH = 3;
 
     private List<Point> body;
@@ -77,6 +78,17 @@ public class Snake implements KeyListener {
             prev = temp;
         }
 
+    }
+
+    public int getSize() {
+        return body.size();
+    }
+
+    public boolean didCollide() {
+        for (int i = 1; i < body.size(); i++) {
+            if (body.get(i).equals(getHead())) return true;
+        }
+        return false;
     }
 
     @Override

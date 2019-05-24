@@ -9,6 +9,8 @@ public class Game extends JPanel implements KeyListener {
 
     private Grid grid;
     private boolean end = false;
+    private boolean again = false;
+    private boolean paused = false;
 
     private static int frameRate = 20;
     private static float interval = 1000.0f / frameRate;
@@ -35,48 +37,84 @@ public class Game extends JPanel implements KeyListener {
 
     public void paint(Graphics g) {
         super.paint(g);
-        // Clear screen
-        g.setColor(Grid.COLOR);
-        g.fillRect(0, 0, getWidth(), getHeight());
 
-        // Draw food
-        g.setColor(grid.getFood().getColor());
-        drawPoint(g, grid.getFood().getPoint());
+        if (!end) {
+            // Fill screen with grid color
+            g.setColor(Grid.COLOR);
+            g.fillRect(0, 0, getWidth(), getHeight());
 
-        // Draw snake
-        g.setColor(Snake.COLOR);
-        for (Point point : grid.getSnake().getBody()) {
-            drawPoint(g, point);
+            // Draw food
+            g.setColor(grid.getFood().getColor());
+            drawPoint(g, grid.getFood().getPoint());
+
+            // Draw snake
+            g.setColor(Snake.COLOR);
+            for (Point point : grid.getSnake().getBody()) {
+                drawPoint(g, point);
+            }
+        } else {
+            // Fill screen with snake color
+            g.setColor(Snake.COLOR);
+            g.fillRect(0, 0, getWidth(), getHeight());
+
+            // Draw snake with grid color
+            g.setColor(Grid.COLOR);
+            for (Point point : grid.getSnake().getBody()) {
+                drawPoint(g, point);
+            }
+
+            // Draw snake head
+            g.setColor(Snake.COLLISION_COLOR);
+            drawPoint(g, grid.getSnake().getHead());
         }
     }
 
     private static void run() {
-        Game game = new Game(500, 500);
-
         JFrame frame = new JFrame();
         frame.setTitle("snek");
-        frame.add(game);
-        frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
         frame.setResizable(false);
 
-        while (!game.end) {
-            float time = System.currentTimeMillis();
+        boolean again;
+        do {
+            Game game = new Game(500, 500);
+            frame.add(game);
+            frame.pack();
+            frame.setVisible(true);
 
-            game.grid.update();
-            game.repaint();
+            while (!game.end) {
+                float time = System.currentTimeMillis();
 
-            time = System.currentTimeMillis() - time;
+                if (game.grid.update()) {
+                    game.repaint();
 
-            if (time < interval) {
+                    time = System.currentTimeMillis() - time;
+
+                    if (time < interval) {
+                        try {
+                            Thread.sleep((long) (interval - time));
+                        } catch (InterruptedException ignore) {
+                        }
+                    }
+                } else {
+                    game.end = true;
+                    game.repaint();
+                    game.paused = true;
+                }
+            }
+
+            while (game.paused) {
                 try {
-                    Thread.sleep((long) (interval - time));
+                    Thread.sleep((long) interval);
                 } catch (InterruptedException ignore) {
                 }
             }
-        }
+
+            again = game.again;
+            frame.setVisible(false);
+            frame.remove(game);
+        } while (again);
     }
 
     public static void main(String[] args) {
@@ -86,8 +124,17 @@ public class Game extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            end = true;
+        int c = e.getKeyCode();
+        switch (c) {
+            case KeyEvent.VK_ESCAPE:
+                end = true;
+                paused = false;
+                break;
+            case KeyEvent.VK_R:
+                again = true;
+                end = true;
+                paused = false;
+                break;
         }
     }
 
