@@ -152,4 +152,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+**/*.pdf
+**/*.log
+
 # End of https://www.gitignore.io/api/macos,windows,intellij+all,visualstudiocode
