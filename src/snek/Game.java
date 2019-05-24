@@ -56,7 +56,10 @@ public class Game extends JPanel implements KeyListener {
             g.setColor(foregrnd);
             g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
             g.drawString("Score: " + score, 10, 16);
-            g.drawString("R to restart | ESC to exit", getWidth() - 190, 16);
+
+            String rEscPrompt = "R to restart   |   ESC to exit";
+
+            g.drawString(rEscPrompt, getWidth() - g.getFontMetrics().stringWidth(rEscPrompt) - 10, 16);
         }
 
         public void setScore(int score) {
