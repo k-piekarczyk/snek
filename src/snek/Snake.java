@@ -15,6 +15,7 @@ public class Snake implements KeyListener {
 
     private List<Point> body;
     private Direction currentDirection = Direction.RIGHT;
+    private Direction pendingDirection = Direction.RIGHT;
     private Grid grid;
 
     public Snake(Grid grid, Point point) {
@@ -57,6 +58,8 @@ public class Snake implements KeyListener {
     public void move() {
         Point prev = (Point) getHead().clone();
 
+        currentDirection = pendingDirection;
+
         switch (currentDirection) {
             case UP:
                 body.set(0, grid.wrap(new Point((int) prev.getX(), (int) prev.getY() - 1)));
@@ -96,16 +99,16 @@ public class Snake implements KeyListener {
         int c = e.getKeyCode();
         switch (c) {
             case KeyEvent.VK_UP:
-                if (currentDirection != Direction.DOWN) currentDirection = Direction.UP;
+                if (currentDirection != Direction.DOWN) pendingDirection = Direction.UP;
                 break;
             case KeyEvent.VK_DOWN:
-                if (currentDirection != Direction.UP) currentDirection = Direction.DOWN;
+                if (currentDirection != Direction.UP) pendingDirection = Direction.DOWN;
                 break;
             case KeyEvent.VK_LEFT:
-                if (currentDirection != Direction.RIGHT) currentDirection = Direction.LEFT;
+                if (currentDirection != Direction.RIGHT) pendingDirection = Direction.LEFT;
                 break;
             case KeyEvent.VK_RIGHT:
-                if (currentDirection != Direction.LEFT) currentDirection = Direction.RIGHT;
+                if (currentDirection != Direction.LEFT) pendingDirection = Direction.RIGHT;
                 break;
         }
     }

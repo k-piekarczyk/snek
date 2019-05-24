@@ -4,10 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
 
 public class Game extends JPanel implements KeyListener {
 
     private Grid grid;
+    private GameInfo gameInfo;
     private boolean end = false;
     private boolean again = false;
     private boolean paused = false;
@@ -26,9 +28,35 @@ public class Game extends JPanel implements KeyListener {
         setFocusable(true);
 
         grid = new Grid(width, height);
+        gameInfo = new GameInfo(width);
 
         addKeyListener(this);
         addKeyListener(grid.getSnake());
+    }
+
+    private class GameInfo extends JPanel {
+        private int score;
+
+        GameInfo(int width){
+            setSize(width, 28);
+            setPreferredSize(new Dimension(width, 23));
+        }
+
+        public void paint(Graphics g) {
+            super.paint(g);
+
+            g.setColor(Grid.COLOR);
+            g.fillRect(0, 0, getWidth(), getHeight());
+
+            g.setColor(Snake.COLOR);
+            g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+            g.drawString("Score: " + score, 10, 16);
+            g.drawString("R to restart | ESC to exit", getWidth() - 190, 16);
+        }
+
+        public void setScore(int score) {
+            this.score = score;
+        }
     }
 
     private void drawPoint(Graphics g, Point point) {
@@ -78,8 +106,13 @@ public class Game extends JPanel implements KeyListener {
 
         boolean again;
         do {
+            JPanel container = new JPanel();
+            container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+
             Game game = new Game(500, 500);
-            frame.add(game);
+            container.add(game);
+            container.add(game.gameInfo);
+            frame.add(container);
             frame.pack();
             frame.setVisible(true);
 
@@ -87,7 +120,9 @@ public class Game extends JPanel implements KeyListener {
                 float time = System.currentTimeMillis();
 
                 if (game.grid.update()) {
+                    game.gameInfo.setScore(game.grid.getSnake().getSize());
                     game.repaint();
+                    game.gameInfo.repaint();
 
                     time = System.currentTimeMillis() - time;
 
@@ -99,7 +134,9 @@ public class Game extends JPanel implements KeyListener {
                     }
                 } else {
                     game.end = true;
+                    game.gameInfo.setScore(game.grid.getSnake().getSize());
                     game.repaint();
+                    game.gameInfo.repaint();
                     game.paused = true;
                 }
             }
@@ -113,8 +150,9 @@ public class Game extends JPanel implements KeyListener {
 
             again = game.again;
             frame.setVisible(false);
-            frame.remove(game);
+            frame.remove(container);
         } while (again);
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }
 
     public static void main(String[] args) {
