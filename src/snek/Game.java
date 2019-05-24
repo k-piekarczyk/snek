@@ -14,7 +14,7 @@ public class Game extends JPanel implements KeyListener {
     private boolean again = false;
     private boolean paused = false;
 
-    private static int frameRate = 20;
+    private static int frameRate = 25;
     private static float interval = 1000.0f / frameRate;
 
     private Game(int width, int height) {
@@ -35,9 +35,14 @@ public class Game extends JPanel implements KeyListener {
     }
 
     private class GameInfo extends JPanel {
+        private final Color bckgrnd = new Color(0xEBEBEB); // ISABELLINE
+        private final Color foregrnd = new Color(0x424242); // ARSENIC
+
+        private final int scoreMultiplier = 5;
+
         private int score;
 
-        GameInfo(int width){
+        GameInfo(int width) {
             setSize(width, 28);
             setPreferredSize(new Dimension(width, 23));
         }
@@ -45,17 +50,17 @@ public class Game extends JPanel implements KeyListener {
         public void paint(Graphics g) {
             super.paint(g);
 
-            g.setColor(Grid.COLOR);
+            g.setColor(bckgrnd);
             g.fillRect(0, 0, getWidth(), getHeight());
 
-            g.setColor(Snake.COLOR);
+            g.setColor(foregrnd);
             g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
             g.drawString("Score: " + score, 10, 16);
             g.drawString("R to restart | ESC to exit", getWidth() - 190, 16);
         }
 
         public void setScore(int score) {
-            this.score = score;
+            this.score = score * scoreMultiplier;
         }
     }
 
@@ -82,11 +87,11 @@ public class Game extends JPanel implements KeyListener {
             }
         } else {
             // Fill screen with snake color
-            g.setColor(Snake.COLOR);
+            g.setColor(Grid.COLOR);
             g.fillRect(0, 0, getWidth(), getHeight());
 
             // Draw snake with grid color
-            g.setColor(Grid.COLOR);
+            g.setColor(Snake.COLOR_MUTED);
             for (Point point : grid.getSnake().getBody()) {
                 drawPoint(g, point);
             }
@@ -94,6 +99,28 @@ public class Game extends JPanel implements KeyListener {
             // Draw snake head
             g.setColor(Snake.COLLISION_COLOR);
             drawPoint(g, grid.getSnake().getHead());
+
+            Color msgBoxColor = new Color(0xEB0000); // ISABELLINE
+            Color msgBoxShadowColor = new Color(0x340000); // ISABELLINE
+            Color msgTextColor = new Color(0xFFFFFF); // ARSENIC
+
+            int msgBoxWidth = 300;
+            int msgBoxHeight = 25;
+            int msgHeight = 20;
+            String msg = "You've lost.";
+
+            g.setFont(new Font(Font.MONOSPACED, Font.BOLD, msgHeight));
+            int msgWidth = g.getFontMetrics().stringWidth(msg);
+
+            g.setColor(msgBoxShadowColor);
+            g.fillRect((getWidth() - msgBoxWidth) / 2 + 8, (getHeight() - msgBoxHeight) / 2 + 8, msgBoxWidth, msgBoxHeight);
+
+            g.setColor(msgBoxColor);
+            g.fillRect((getWidth() - msgBoxWidth) / 2, (getHeight() - msgBoxHeight) / 2, msgBoxWidth, msgBoxHeight);
+
+            g.setColor(msgTextColor);
+            g.drawString(msg, (getWidth() - msgWidth) / 2, (getHeight() - msgHeight) / 2 + 4);
+
         }
     }
 
@@ -109,7 +136,7 @@ public class Game extends JPanel implements KeyListener {
             JPanel container = new JPanel();
             container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-            Game game = new Game(500, 500);
+            Game game = new Game(700, 700);
             container.add(game);
             container.add(game.gameInfo);
             frame.add(container);
@@ -134,7 +161,7 @@ public class Game extends JPanel implements KeyListener {
                     }
                 } else {
                     game.end = true;
-                    game.gameInfo.setScore(game.grid.getSnake().getSize());
+                    game.gameInfo.setScore(game.grid.getSnake().getSize() - Snake.INITIAL_LENGTH);
                     game.repaint();
                     game.gameInfo.repaint();
                     game.paused = true;

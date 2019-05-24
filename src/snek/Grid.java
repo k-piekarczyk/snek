@@ -5,7 +5,8 @@ import java.util.Random;
 
 public class Grid {
     static final int SIZE = 10;
-    static final Color COLOR = new Color(0xEBEBEB); // ISABELLINE
+
+    public final static Color COLOR = new Color(0x424242); // ARSENIC
 
     private final int rows;
     private final int cols;

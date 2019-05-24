@@ -9,7 +9,8 @@ import java.util.List;
 public class Snake implements KeyListener {
     private enum Direction {UP, DOWN, LEFT, RIGHT}
 
-    public final static Color COLOR = new Color(0x424242); // ARSENIC
+    static final Color COLOR = new Color(0xEBEBEB); // ISABELLINE
+    static final Color COLOR_MUTED = new Color(0x848484); // ISABELLINE
     public final static Color COLLISION_COLOR = new Color(0xC45050); // ARSENIC
     public final static int INITIAL_LENGTH = 3;
 
