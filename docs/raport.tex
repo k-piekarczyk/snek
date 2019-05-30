@@ -24,15 +24,67 @@ Gra umożliwia zresetowanie stanu w dowolnej chwili i pokazuje aktualny wynik gr
 
 Sterowanie wężem odbywa się za pomocą strzałek. Klawisz R doprowadza do zresetowania gry, a ESC do wyjścia.
 
+\section{Informacje o grze}
+
+Początkowa długość węża to 3. Punkty liczone są metodą: długość węża * 5. Gra działa w 25 klatkach na sekundę
+
 \section{Opis klas}
 
 \subsection{\textbf{\textit{Game}}}
 
+Klasa Game odpowiada za przeprowadzenie gry, tworzy ramę, maluje komponenty. Implementuje interfejs KeyListener i dziedziczy JPanel.
+\begin{itemize}
+	\item \textit{private Game(int width, int height)} - ustawia wielkość
+	\item \textit{private void drawPoint(Graphics g, Point point)} - rysuje punkt na planszy
+	\item \textit{public void paint(Graphics g)} - odpowiada za malowanie całej planszy w ramie  i wszystkie rzeczy które się na niej znajdują
+	\item \textit{private static void run()} - tworzy ramę gry, znajduje się też pętla w której przeprowadzana jest gra
+	\item \textit{public void keyPressed(KeyEvent e)} - wczytywanie lub wyjście z gry
+	\item \textit{public static void main(String[] args)}
+\end{itemize}
+\subsection{\textbf{\textit{GameInfo}}}
+
+Znajdująca się w klasie Game, odpowiada z punktację.
+\begin{itemize}
+	\item \textit{GameInfo(int width)} - ustawia  wielkość
+	\item \textit{public void paint(Graphics g)} - maluje odpowiednie elementy
+	\item \textit{public void setScore(int score)} - ustawia aktualną punktację 
+\end{itemize}
 \subsection{\textbf{\textit{Grid}}}
 
+Klasa Grid odpowiada za planszę gry, przemieszczanie się po niej węża i pojawianie jedzenia.
+\begin{itemize}
+	\item \textit{public Grid(int width, int height)} - ustawia liczbę wierszy i kolumn, początkowe miejsce węża i jedzenia
+	\item \textit{private Point getRandomPoint()} - zwraca losowy punkt na mapie
+	\item \textit{public Point wrap(Point point)} - odpowiada za  przechodzenie węża przez ściany
+	\item \textit{public boolean update()} - w przypadku zjedzenia wywołuje metodę przedłużająca węża i ustawia odpowiedni punkt, wywołuje też ruch i sprawdza czy nie nastąpiła kolizja
+	\item \textit{public Snake getSnake()} - zwraca węża
+	\item \textit{public Food getFood()} - zwraca jedzenie
+	\item \textit{public int getRealX(Point point)} - zwraca współrzędną  x
+	\item \textit{public int getRealY(Point point)} - zwraca współrzędną y
+\end{itemize}
 \subsection{\textbf{\textit{Snake}}}
+
+Klasa Snake odpowiada za samego węża, jego ruch, kierunek ruchu, przedłużenie ciała i sprawdzanie kolizji. Implementuje interfejs KeyListener.
+\begin{itemize}
+	\item \textit{public Snake(Grid grid, Point point)} - tworzy na planszy ciało węża o odpowiedniej długości
+	\item \textit{public Point getHead()} - zwraca głowę węża
+	\item \textit{public List<Point> getBody()} - zwraca ciało węża
+	\item \textit{public void extend()} - odpowiada za przedłużanie ciała
+	\item \textit{public void move()} - ruch węża po mapie
+	\item \textit{public int getSize()} - zwraca aktualną wielkość węża
+	\item \textit{public boolean didCollide()} - sprawdza czy głowa węża nie zderzyła się z resztą jego ciała
+	\item \textit{public void keyPressed(KeyEvent e)} - zwraca odpowiedni kierunek ruchu, który został wywołany naciśnięciem klawiszy
+	\end{itemize}
 
 \subsection{\textbf{\textit{Food}}}
 
+Klasa Food odpowiada za pojawiające się na mapie jedzenie. Przy pomocy metody Random wybiera jeden z trzech dostępnych kolorów jako który pojawi się jedzenie.
+
+\begin{itemize}
+            \item \textit{public Food(Point point)} - przyjmuje punkt, nadaje mu wybrany losowy kolor
+            \item \textit{public Point getPoint()} - zwraca punkt
+            \item \textit{public void setPoint(Point point))} - ustawia kolor
+            \item \textit{public Color getColor()} - zwraca kolor
+\end{itemize}
 
 \end{document}
