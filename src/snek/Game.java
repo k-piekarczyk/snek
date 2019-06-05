@@ -65,6 +65,10 @@ public class Game extends JPanel implements KeyListener {
         public void setScore(int score) {
             this.score = score * scoreMultiplier;
         }
+
+        public int getScore() {
+            return score;
+        }
     }
 
     private void drawPoint(Graphics g, Point point) {
@@ -110,7 +114,7 @@ public class Game extends JPanel implements KeyListener {
             int msgBoxWidth = 300;
             int msgBoxHeight = 25;
             int msgHeight = 20;
-            String msg = "You've lost.";
+            String msg = String.format("Your score: %d", gameInfo.getScore());
 
             g.setFont(new Font(Font.MONOSPACED, Font.BOLD, msgHeight));
             int msgWidth = g.getFontMetrics().stringWidth(msg);
