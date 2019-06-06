@@ -62,8 +62,8 @@ public class Game extends JPanel implements KeyListener {
             g.drawString(rEscPrompt, getWidth() - g.getFontMetrics().stringWidth(rEscPrompt) - 10, 16);
         }
 
-        public void setScore(int score) {
-            this.score = score * scoreMultiplier;
+        public void setScore(int snakeLength) {
+            this.score = (snakeLength - Snake.INITIAL_LENGTH) * scoreMultiplier;
         }
 
         public int getScore() {

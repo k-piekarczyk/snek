@@ -12,7 +12,7 @@ public class Snake implements KeyListener {
     static final Color COLOR = new Color(0xEBEBEB); // ISABELLINE
     static final Color COLOR_MUTED = new Color(0x848484); // ISABELLINE
     public final static Color COLLISION_COLOR = new Color(0xC45050); // ARSENIC
-    public final static int INITIAL_LENGTH = 3;
+    public final static int INITIAL_LENGTH = 5;
 
     private List<Point> body;
     private Direction currentDirection = Direction.RIGHT;
